@@ -31,6 +31,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   name: 'HelloWorld',
   props: {
@@ -38,8 +39,22 @@ export default {
   },
   data() {
     return {
-      siteName: process.env.VUE_APP_TITLE
+      siteName: process.env.VUE_APP_TITLE,
+      data: [],
+      results: [],
     }
+  },
+  async mounted() {
+    await axios
+      .get(`${process.env.VUE_APP_API_URL}characters?apikey=${process.env.VUE_APP_API_KEY}`)
+      .then(response => {
+        this.data = response.data.data
+        this.results = response.data.data.results
+      })
+      .catch(error => {
+        console.log(error)
+        this.errored = true
+      })
   }
 }
 </script>

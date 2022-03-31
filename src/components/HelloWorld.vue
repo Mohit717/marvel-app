@@ -22,7 +22,7 @@ import HeaderComponent from './HeaderComponent.vue'
 import JumboTron from './Jumbotron.vue'
 import CardComponent from './CardComponent.vue'
 import FooterComponent from './FooterComponent.vue'
-import axios from "axios";
+
 export default {
   name: "HelloWorld",
   props: {
@@ -40,20 +40,6 @@ export default {
       data: [],
       results: [],
     };
-  },
-  async mounted() {
-    await axios
-      .get(
-        `${process.env.VUE_APP_API_URL}characters?apikey=${process.env.VUE_APP_API_KEY}`
-      )
-      .then((response) => {
-        this.data = response.data.data;
-        this.results = response.data.data.results;
-      })
-      .catch((error) => {
-        console.log(error);
-        this.errored = true;
-      });
   },
 };
 </script>

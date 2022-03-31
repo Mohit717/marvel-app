@@ -1,15 +1,14 @@
 <template>
-  <div class="col-md-4">
+  <div class="col-md-4" v-for="(character, index) in characters" :key="index">
     <div class="card mb-4 box-shadow">
       <img
         class="card-img-top"
-        data-src="holder.js/100px225?theme=thumb&bg=55595c&fg=eceeef&text=Thumbnail"
+        :src="character.thumbnail.path+'.'+character.thumbnail.extension"
         alt="Card image cap"
       />
       <div class="card-body">
         <p class="card-text">
-          This is a wider card with supporting text below as a natural lead-in
-          to additional content. This content is a little bit longer.
+          {{character.name}}
         </p>
         <div class="d-flex justify-content-between align-items-center">
           <div class="btn-group">
@@ -28,7 +27,30 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   name: "CardComponent",
+  data() {
+    return {
+      siteName: process.env.VUE_APP_TITLE,
+      data: [],
+      characters: [],
+    };
+  },
+  async mounted() {
+    await axios
+      .get(
+        `${process.env.VUE_APP_API_URL}characters?apikey=${process.env.VUE_APP_API_KEY}`
+      )
+      .then((response) => {
+        this.data = response.data.data;
+        this.characters = response.data.data.results;
+      })
+      .catch((error) => {
+        console.log(error);
+        this.errored = true;
+      });
+  },
 };
 </script>

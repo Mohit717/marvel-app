@@ -7,7 +7,16 @@
       <div class="album py-5 bg-light">
         <div class="container">
           <div class="row">
-            <CardComponent />
+            <CardComponent :offset="offset" @pagedata="pagedata" ref="cardcop"/>
+          </div>
+          <div class="row">
+            <PaginationComponent
+              :total-pages="totalPage"
+              :total="total"
+              :per-page="perpage"
+              :current-page="currentPage"
+              @pagechanged="onPageChange"
+            />
           </div>
         </div>
       </div>
@@ -18,28 +27,45 @@
 </template>
 
 <script>
-import HeaderComponent from './HeaderComponent.vue'
-import JumboTron from './Jumbotron.vue'
-import CardComponent from './CardComponent.vue'
-import FooterComponent from './FooterComponent.vue'
+import HeaderComponent from "./HeaderComponent.vue";
+import JumboTron from "./Jumbotron.vue";
+import CardComponent from "./CardComponent.vue";
+import PaginationComponent from "./PaginationComponent.vue";
+import FooterComponent from "./FooterComponent.vue";
 
 export default {
   name: "HelloWorld",
   props: {
     msg: String,
   },
-  components:{
+  components: {
     HeaderComponent,
     JumboTron,
     CardComponent,
-    FooterComponent
+    PaginationComponent,
+    FooterComponent,
   },
   data() {
     return {
       siteName: process.env.VUE_APP_TITLE,
-      data: [],
-      results: [],
+      currentPage: 1,
+      totalPage: null,
+      total:null,
+      perpage:12,
+      offset:null,
     };
+  },
+  methods: {
+    onPageChange(page) {
+      this.currentPage = page;
+      this.$refs.cardcop.getInitialCharacters();
+    },
+    pagedata(data){
+      this.total = data.total
+      this.perpage = data.limit
+      this.totalPage = data.total / data.limit
+      this.offset = (data.limit*this.currentPage) - data.limit
+    },
   },
 };
 </script>

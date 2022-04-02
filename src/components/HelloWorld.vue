@@ -6,6 +6,16 @@
       <div class="album py-5 bg-light">
         <div class="container">
           <div class="row">
+            <div class="col-md-3 mb-3">
+              <select class="form-control" @change="sortCharacter($event)">
+                <option selected value="name">Name ASC</option>
+                <option value="-name">Name DESC</option>
+                <option value="modified">Modified ASC</option>
+                <option value="-modified">Modified DESC</option>
+              </select>
+            </div>
+          </div>
+          <div class="row">
             <div
               class="col-md-3"
               v-for="(character, index) in characters"
@@ -22,7 +32,6 @@
                   alt="Card image cap"
                 />
                 <div class="card-body">
-                  <small>{{ formatDate(character.modified) }}</small>
                   <p class="card-text">
                     {{ character.name }}
                   </p>
@@ -43,7 +52,9 @@
                         Edit
                       </button>
                     </div>
-                    <small class="text-muted">9 mins</small>
+                    <small class="text-muted">{{
+                      formatDate(character.modified)
+                    }}</small>
                   </div>
                 </div>
               </div>
@@ -80,13 +91,14 @@ export default {
       characters: [],
       perpage: 12,
       offset: 0,
+      orderBy: "name"
     };
   },
   methods: {
     async getInitialCharacters() {
       await axios
         .get(
-          `${process.env.VUE_APP_API_URL}characters?orderBy=name&limit=${this.perpage}&offset=${this.offset}&apikey=${process.env.VUE_APP_API_KEY}`
+          `${process.env.VUE_APP_API_URL}characters?orderBy=${this.orderBy}&limit=${this.perpage}&offset=${this.offset}&apikey=${process.env.VUE_APP_API_KEY}`
         )
         .then((response) => {
           response.data.data.results.map((character) => {
@@ -107,9 +119,14 @@ export default {
         if (bottomOfWindow) {
           this.offset = this.offset + this.perpage;
           console.log(this.offset);
-          this.getInitialCharacters()
+          this.getInitialCharacters();
         }
       };
+    },
+    sortCharacter(event) {
+      this.orderBy = event.target.value
+      this.characters = []
+      this.getInitialCharacters();
     },
     formatDate(dateString) {
       let convertedDate = new Date(dateString);
@@ -141,7 +158,7 @@ li {
 a {
   color: #42b983;
 }
-.card-img-top{
-  height:250px
+.card-img-top {
+  height: 250px;
 }
 </style>

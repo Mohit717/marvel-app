@@ -33,10 +33,7 @@ import axios from "axios";
 export default {
   name: "CardComponent",
   props: {
-    offset: {
-      type: Number,
-      required: true,
-    },
+    offset
   },
   data() {
     return {

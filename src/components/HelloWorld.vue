@@ -50,15 +50,6 @@
               </div>
             </div>
           </div>
-          <div class="row">
-            <PaginationComponent
-              :total-pages="totalPage"
-              :total="total"
-              :per-page="perpage"
-              :current-page="currentPage"
-              @pagechanged="onPageChange"
-            />
-          </div>
         </div>
       </div>
     </main>
@@ -82,7 +73,6 @@ export default {
   components: {
     HeaderComponent,
     JumboTron,
-    PaginationComponent,
     FooterComponent,
   },
   data() {
@@ -90,34 +80,37 @@ export default {
       siteName: process.env.VUE_APP_TITLE,
       characters: [],
       perpage: 12,
-      currentPage: 1,
-      totalPage: null,
-      total: null,
-      perpage: 12,
       offset: 0,
     };
   },
   methods: {
-    onPageChange(page) {
-      this.currentPage = page;
-      this.offset = page * this.perpage - this.perpage;
-      this.getInitialCharacters();
-    },
     async getInitialCharacters() {
       await axios
         .get(
           `${process.env.VUE_APP_API_URL}characters?orderBy=name&limit=${this.perpage}&offset=${this.offset}&apikey=${process.env.VUE_APP_API_KEY}`
         )
         .then((response) => {
-          this.total = response.data.data.total;
-          this.perpage = response.data.data.limit;
-          this.totalPage = response.data.data.total / response.data.data.limit;
-          this.characters = response.data.data.results;
+          response.data.data.results.map((character) => {
+            this.characters.push(character);
+          });
+          this.offset = response.data.data.offset;
         })
         .catch((error) => {
           console.log(error);
           this.errored = true;
         });
+    },
+    getNextUser() {
+      window.onscroll = () => {
+        let bottomOfWindow =
+          document.documentElement.scrollTop + window.innerHeight ===
+          document.documentElement.offsetHeight;
+        if (bottomOfWindow) {
+          this.offset = this.offset + this.perpage;
+          console.log(this.offset);
+          this.getInitialCharacters()
+        }
+      };
     },
     formatDate(dateString) {
       let convertedDate = new Date(dateString);
@@ -126,6 +119,9 @@ export default {
   },
   beforeMount() {
     this.getInitialCharacters();
+  },
+  mounted() {
+    this.getNextUser();
   },
 };
 </script>
@@ -145,5 +141,8 @@ li {
 }
 a {
   color: #42b983;
+}
+.card-img-top{
+  height:250px
 }
 </style>

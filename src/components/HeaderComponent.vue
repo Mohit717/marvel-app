@@ -43,7 +43,7 @@
             ></path>
             <circle cx="12" cy="13" r="4"></circle>
           </svg>
-          <strong>Album</strong>
+          <strong>Marvel</strong>
         </a>
         <button
           class="navbar-toggler"

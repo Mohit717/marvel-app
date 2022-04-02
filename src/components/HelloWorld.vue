@@ -2,8 +2,7 @@
   <div class="hello">
     <HeaderComponent />
     <main role="main">
-      <JumboTron />
-
+      <!-- <JumboTron /> -->
       <div class="album py-5 bg-light">
         <div class="container">
           <div class="row">

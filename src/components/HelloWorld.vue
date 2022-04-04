@@ -15,6 +15,7 @@
               </select>
             </div>
           </div>
+          
           <div class="row">
             <div
               class="col-md-3"
@@ -59,6 +60,9 @@
                 </div>
               </div>
             </div>
+            <div v-if="loading" class="loader">
+              <img src="@/assets/loader.svg">
+            </div>
           </div>
         </div>
       </div>
@@ -91,16 +95,19 @@ export default {
       characters: [],
       perpage: 12,
       offset: 0,
-      orderBy: "name"
+      orderBy: "name",
+      loading: false,
     };
   },
   methods: {
     async getInitialCharacters() {
+      this.loading = true;
       await axios
         .get(
           `${process.env.VUE_APP_API_URL}characters?orderBy=${this.orderBy}&limit=${this.perpage}&offset=${this.offset}&apikey=${process.env.VUE_APP_API_KEY}`
         )
         .then((response) => {
+          this.loading = false;
           response.data.data.results.map((character) => {
             this.characters.push(character);
           });
@@ -124,8 +131,8 @@ export default {
       };
     },
     sortCharacter(event) {
-      this.orderBy = event.target.value
-      this.characters = []
+      this.orderBy = event.target.value;
+      this.characters = [];
       this.getInitialCharacters();
     },
     formatDate(dateString) {
@@ -160,5 +167,12 @@ a {
 }
 .card-img-top {
   height: 250px;
+}
+.loader {
+  width: 100px;
+  margin: auto;
+}
+.loader img{
+  width: 100px;
 }
 </style>

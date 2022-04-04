@@ -15,7 +15,7 @@
               </select>
             </div>
           </div>
-          
+
           <div class="row">
             <div
               class="col-md-3"
@@ -43,14 +43,10 @@
                       <button
                         type="button"
                         class="btn btn-sm btn-outline-secondary"
+                        data-toggle="modal"
+                        data-target="#myModal2"
                       >
                         View
-                      </button>
-                      <button
-                        type="button"
-                        class="btn btn-sm btn-outline-secondary"
-                      >
-                        Edit
                       </button>
                     </div>
                     <small class="text-muted">{{
@@ -61,14 +57,14 @@
               </div>
             </div>
             <div v-if="loading" class="loader">
-              <img src="@/assets/loader.svg">
+              <img src="@/assets/loader.svg" />
             </div>
           </div>
         </div>
       </div>
     </main>
-
     <FooterComponent />
+    <RightModalComponent />
   </div>
 </template>
 
@@ -76,8 +72,8 @@
 import axios from "axios";
 import HeaderComponent from "./HeaderComponent.vue";
 import JumboTron from "./Jumbotron.vue";
-import PaginationComponent from "./PaginationComponent.vue";
 import FooterComponent from "./FooterComponent.vue";
+import RightModalComponent from "./RightModalComponent.vue"
 
 export default {
   name: "HelloWorld",
@@ -88,6 +84,7 @@ export default {
     HeaderComponent,
     JumboTron,
     FooterComponent,
+    RightModalComponent
   },
   data() {
     return {
@@ -111,6 +108,7 @@ export default {
           response.data.data.results.map((character) => {
             this.characters.push(character);
           });
+          console.log(this.characters)
           this.offset = response.data.data.offset;
         })
         .catch((error) => {
@@ -125,7 +123,6 @@ export default {
           document.documentElement.offsetHeight;
         if (bottomOfWindow) {
           this.offset = this.offset + this.perpage;
-          console.log(this.offset);
           this.getInitialCharacters();
         }
       };
@@ -172,7 +169,7 @@ a {
   width: 100px;
   margin: auto;
 }
-.loader img{
+.loader img {
   width: 100px;
 }
 </style>

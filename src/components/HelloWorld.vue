@@ -2,6 +2,7 @@
   <div class="hello">
     <HeaderComponent />
     <main role="main">
+      <p>Testing branchB</p>
       <!-- <JumboTron /> -->
       <div class="album py-5 bg-light">
         <div class="container">
